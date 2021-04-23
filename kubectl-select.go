@@ -19,10 +19,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/marcusolsson/tui-go"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/marcusolsson/tui-go"
 )
 
 func cmd(cmdLine string) ([]byte, error) {
@@ -31,6 +33,28 @@ func cmd(cmdLine string) ([]byte, error) {
 	args := cmdSplit[1:]
 
 	return exec.Command(cmd, args...).Output()
+}
+
+func chooseFZF(all []string) (string, error) {
+	// Set up pipe and begin dumping text into it
+	pout, pin, err := os.Pipe()
+	if err != nil {
+		return "", err
+	}
+	go func() {
+		for i := range all {
+			fmt.Fprintf(pin, "%s\n", all[i])
+		}
+	}()
+
+	// Set up fzf to process the output of the pipe
+	fzf := exec.Command("fzf")
+	fzf.Stdin = pout
+	fzf.Stderr = os.Stderr // fzf uses stderr to display its UI.
+
+	// Retrieve fzf output and return.
+	output, err := fzf.Output()
+	return string(output), err
 }
 
 type K8sContext struct {
@@ -60,10 +84,7 @@ func getConfig() *K8sConfig {
 	return cfg
 }
 
-func main() {
-
-	cfg := getConfig()
-
+func doTUI(cfg *K8sConfig) {
 	table := tui.NewTable(0, 0)
 	table.SetColumnStretch(0, 1)
 	table.SetColumnStretch(1, 4)
@@ -126,4 +147,33 @@ func main() {
 	if err := ui.Run(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func selectFZF(cfg *K8sConfig) {
+	names := []string{}
+	for i := range cfg.Contexts {
+		names = append(names, cfg.Contexts[i].Name)
+	}
+
+	selected, err := chooseFZF(names)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to select: %v\n", err)
+		return
+	}
+
+	// Trim off the newline char
+	name := selected[:len(selected)-1]
+
+	// Use kubectl to change the config
+	_, err = cmd(fmt.Sprintf("kubectl config use-context %s", name))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to select: %v\n", err)
+		return
+	}
+	fmt.Printf("selected %s\n", name)
+}
+
+func main() {
+	cfg := getConfig()
+	selectFZF(cfg)
 }

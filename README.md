@@ -1,20 +1,22 @@
-# ✵ kubectl-select [![GoDoc](https://godoc.org/github.com/n3wscott/kubectl-select?status.svg)](https://godoc.org/github.com/n3wscott/kubectl-select) [![Go Report Card](https://goreportcard.com/badge/n3wscott/kubectl-select)](https://goreportcard.com/report/n3wscott/kubectl-select)
+# ✵ kubectl-select [![GoDoc](https://godoc.org/github.com/spencer-p/kubectl-select?status.svg)](https://godoc.org/github.com/spencer-p/kubectl-select) [![Go Report Card](https://goreportcard.com/badge/spencer-p/kubectl-select)](https://goreportcard.com/report/spencer-p/kubectl-select)
 
 A `kubectl` extension to select from local config via a TUI.
 
 
 ## Installation
 
+Requires `fzf` to be installed.
+
 `kubectl-select` can be installed via:
 
 ```shell
-go get github.com/n3wscott/kubectl-select
+go get github.com/spencer-p/kubectl-select
 ```
 
 To update your installation:
 
 ```shell
-go get -u github.com/n3wscott/kubectl-select
+go get -u github.com/spencer-p/kubectl-select
 ```
 
 ## Usage
