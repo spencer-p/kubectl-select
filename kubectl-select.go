@@ -45,6 +45,7 @@ func chooseFZF(all []string) (string, error) {
 		for i := range all {
 			fmt.Fprintf(pin, "%s\n", all[i])
 		}
+		pin.Close()
 	}()
 
 	// Set up fzf to process the output of the pipe
