@@ -5,7 +5,7 @@ A `kubectl` extension to select from local config via a TUI.
 
 ## Installation
 
-Requires `fzf` to be installed.
+Requires `fzf` to be [installed](https://github.com/junegunn/fzf).
 
 `kubectl-select` can be installed via:
 
