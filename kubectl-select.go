@@ -36,11 +36,12 @@ func cmd(cmdLine string) ([]byte, error) {
 }
 
 func chooseFZF(all []string) (string, error) {
-	// Set up pipe and begin dumping text into it
+	// Set up pipe and begin dumping text into it.
 	pout, pin, err := os.Pipe()
 	if err != nil {
 		return "", err
 	}
+	defer pout.Close() // Note pout.Close() must come after exec("fzf").
 	go func() {
 		for i := range all {
 			fmt.Fprintf(pin, "%s\n", all[i])
@@ -48,7 +49,7 @@ func chooseFZF(all []string) (string, error) {
 		pin.Close()
 	}()
 
-	// Set up fzf to process the output of the pipe
+	// Set up fzf to process the output of the pipe.
 	fzf := exec.Command("fzf")
 	fzf.Stdin = pout
 	fzf.Stderr = os.Stderr // fzf uses stderr to display its UI.
