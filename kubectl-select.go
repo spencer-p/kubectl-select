@@ -50,7 +50,7 @@ func chooseFZF(all []string) (string, error) {
 	}()
 
 	// Set up fzf to process the output of the pipe.
-	fzf := exec.Command("fzf")
+	fzf := exec.Command("fzf", "--height=20%")
 	fzf.Stdin = pout
 	fzf.Stderr = os.Stderr // fzf uses stderr to display its UI.
 
