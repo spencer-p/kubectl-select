@@ -5,23 +5,17 @@ A `kubectl` extension to select from local config via a TUI.
 
 ## Installation
 
-Requires `fzf` to be [installed](https://github.com/junegunn/fzf).
+Prefer `fzf` to be [installed](https://github.com/junegunn/fzf).
 
 `kubectl-select` can be installed via:
 
 ```shell
-go get github.com/spencer-p/kubectl-select
-```
-
-To update your installation:
-
-```shell
-go get -u github.com/spencer-p/kubectl-select
+go install github.com/spencer-p/kubectl-select@latest
 ```
 
 ## Usage
 
-Use as a kubernetes extension, 
+Use as a kubernetes extension:
 
 ```shell
 kubectl select
@@ -29,5 +23,7 @@ kubectl select
 
 This will show a menu driven off the currently configured Kubernetes clients.
 
-Select one by pressing `ENTER`. To cancel, `ESC` or `q`.
+If FZF is installed, a FZF menu will be used to select. Otherwise, you will get
+a simple TUI.
 
+Select one by pressing `ENTER`. To cancel, `ESC` or ^C.
