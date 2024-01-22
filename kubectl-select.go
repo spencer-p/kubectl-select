@@ -175,7 +175,18 @@ func selectFZF(cfg *K8sConfig) {
 	fmt.Printf("selected %s\n", name)
 }
 
+func hasFZF() bool {
+	if _, err := exec.LookPath("fzf"); err != nil {
+		return false
+	}
+	return true
+}
+
 func main() {
 	cfg := getConfig()
-	selectFZF(cfg)
+	if hasFZF() {
+		selectFZF(cfg)
+	} else {
+		doTUI(cfg)
+	}
 }
